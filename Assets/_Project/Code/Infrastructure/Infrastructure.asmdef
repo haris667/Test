@@ -1,0 +1,20 @@
+{
+    "name": "Mirra.Infrastructure",
+    "references": [
+        "Mirra.Domain",
+        "Mirra.Application",
+        "UniTask",
+        "UniTask.Addressables",
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": []
+}

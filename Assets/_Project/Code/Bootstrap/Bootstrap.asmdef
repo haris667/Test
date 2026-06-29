@@ -1,0 +1,21 @@
+{
+    "name": "Bootstrap",
+    "references": [
+        "Mirra.Domain",
+        "Mirra.Application",
+        "Mirra.Infrastructure",
+        "Mirra.Presentation",
+        "UniTask",
+        "VContainer",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": []
+}
