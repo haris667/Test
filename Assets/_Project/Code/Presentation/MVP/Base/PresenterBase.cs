@@ -20,6 +20,8 @@ namespace Mirra.Presentation.MVP.Base
 
         void IStartable.Start()
         {
+            if (View is UnityEngine.Object obj && obj == null) return;
+
             _cts = new CancellationTokenSource();
             _linkedCts = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, View.LifetimeToken);
             CancellationToken = _linkedCts.Token;

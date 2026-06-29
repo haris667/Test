@@ -1,6 +1,4 @@
 using System;
-using System.Net;
-using System.Net.Http;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Mirra.Application.Abstractions;
@@ -8,41 +6,33 @@ using Mirra.Application.Configs;
 using Mirra.Domain.Models;
 using Mirra.Infrastructure.REST.Dto;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Mirra.Infrastructure.REST
 {
-    public class TimeRestRepository : ITimeRepository, IDisposable
+    public class TimeRestRepository : ITimeRepository
     {
-        private readonly HttpClient _http;
         private readonly ITimeApiConfig _config;
 
         public TimeRestRepository(ITimeApiConfig config)
         {
             _config = config;
-
-            // Unity Editor runs on Mono. ServicePointManager is the correct hook
-            // for bypassing SSL validation in Mono's HTTP stack.
-            ServicePointManager.SecurityProtocol =
-                SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            ServicePointManager.ServerCertificateValidationCallback = (_, _, _, _) => true;
-
-            _http = new HttpClient();
         }
 
         public async UniTask<TimeData> GetCurrentTimeAsync(CancellationToken ct = default)
         {
-            using var response = await _http.GetAsync(_config.ApiUrl, ct);
-            response.EnsureSuccessStatusCode();
+            using var request = UnityWebRequest.Get(_config.ApiUrl);
+            await request.SendWebRequest().WithCancellation(ct);
 
-            var json = await response.Content.ReadAsStringAsync();
-            var dto = JsonUtility.FromJson<WorldTimeApiResponse>(json);
+            if (request.result != UnityWebRequest.Result.Success)
+                throw new Exception($"HTTP error: {request.error}");
+
+            var dto = JsonUtility.FromJson<WorldTimeApiResponse>(request.downloadHandler.text);
             return new TimeData(ParseUtc(dto));
         }
 
         public UniTask SetTimeAsync(TimeData time, CancellationToken ct = default)
             => UniTask.CompletedTask;
-
-        public void Dispose() => _http.Dispose();
 
         private static DateTime ParseUtc(WorldTimeApiResponse dto)
         {

@@ -43,6 +43,8 @@ namespace Mirra.Presentation.Loading
 
         private async UniTaskVoid FadeOutAsync()
         {
+            if (this == null || _canvasGroup == null) return;
+
             _canvasGroup.interactable = false;
             _canvasGroup.blocksRaycasts = false;
 
